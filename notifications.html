@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications & Announcements | SAMS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div id="sidebar-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div class="sidebar-brand-text">
+          <h2>SAMS Portal</h2>
+          <span id="sidebar-role-indicator">Notifications</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="admin-dashboard.html" class="nav-link admin-only-nav">
+          <i class="fa-solid fa-chart-pie"></i> Dashboard
+        </a>
+        <a href="student-dashboard.html" class="nav-link student-only-nav" style="display:none;">
+          <i class="fa-solid fa-chart-user"></i> My Attendance
+        </a>
+        <a href="students.html" class="nav-link admin-only-nav">
+          <i class="fa-solid fa-user-graduate"></i> Student Management
+        </a>
+        <a href="attendance.html" class="nav-link admin-only-nav">
+          <i class="fa-solid fa-clipboard-check"></i> Mark Attendance
+        </a>
+        <a href="attendance-history.html" class="nav-link admin-only-nav">
+          <i class="fa-solid fa-calendar-days"></i> Attendance History
+        </a>
+        <a href="qr-attendance.html" class="nav-link">
+          <i class="fa-solid fa-qrcode"></i> QR Attendance
+        </a>
+        <a href="reports.html" class="nav-link admin-only-nav">
+          <i class="fa-solid fa-file-invoice"></i> Reports
+        </a>
+        <a href="notifications.html" class="nav-link active">
+          <i class="fa-solid fa-bell"></i> Notifications
+        </a>
+        <a href="profile.html" class="nav-link">
+          <i class="fa-solid fa-circle-user"></i> Profile
+        </a>
+        <a href="#" class="nav-link btn-logout-trigger">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="demo-mode-pill">
+          <span class="pulse-dot"></span>
+          <span>Local Storage Active</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button type="button" class="sidebar-toggle-btn" id="sidebar-toggle" aria-label="Toggle Navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="header-page-title">
+            <h1>Official Notifications</h1>
+            <div class="header-breadcrumb">SAMS / Institutional Bulletin Board</div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button type="button" class="btn btn-secondary btn-sm btn-reset-demo" title="Reset all demo data">
+            <i class="fa-solid fa-rotate-left"></i> Reset Demo Data
+          </button>
+
+          <a href="notifications.html" class="header-action-btn" title="Notifications">
+            <i class="fa-solid fa-bell"></i>
+            <span class="badge-counter" id="nav-notif-badge" style="display:none;">0</span>
+          </a>
+
+          <a href="profile.html" class="user-profile-pill">
+            <img src="" alt="Avatar" class="user-avatar" id="nav-user-avatar">
+            <div class="user-info">
+              <span class="user-name" id="nav-user-name">User</span>
+              <span class="user-role-badge" id="nav-user-role">Member</span>
+            </div>
+          </a>
+        </div>
+      </header>
+
+      <!-- Main Body -->
+      <main class="content-body">
+        <!-- ========================================== -->
+        <!-- ADMIN PANEL: Author and Manage Alerts      -->
+        <!-- ========================================== -->
+        <div id="notif-admin-panel" style="display: none;">
+          <!-- Compose Notification Card -->
+          <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-bullhorn"></i> Broadcast New Announcement
+              </div>
+              <span class="badge badge-student">In-App Delivery</span>
+            </div>
+            <div class="card-body">
+              <form id="notif-create-form">
+                <div class="form-group">
+                  <label class="form-label" for="notif-title">Announcement Title <span class="required">*</span></label>
+                  <input type="text" id="notif-title" class="form-control" placeholder="e.g. End Semester Exam Registration Deadline" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="notif-message">Announcement Message <span class="required">*</span></label>
+                  <textarea id="notif-message" class="form-control" rows="3" placeholder="Enter detailed notice content..." required></textarea>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                  <div class="form-group">
+                    <label class="form-label" for="notif-target-select">Target Recipient</label>
+                    <select id="notif-target-select" class="form-select">
+                      <!-- Loaded dynamically -->
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="notif-type">Priority / Alert Type</label>
+                    <select id="notif-type" class="form-select">
+                      <option value="info">General Info (Blue)</option>
+                      <option value="warning">Advisory / Warning (Amber)</option>
+                      <option value="danger">Urgent / Critical (Red)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end;">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-paper-plane"></i> Publish Notification
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Sent Notifications History Card -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-list-check"></i> Previously Published Notices
+              </div>
+              <span class="card-subtitle">Manage or remove published bulletins</span>
+            </div>
+            <div class="card-body" id="notif-history-list">
+              <!-- Loaded dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- STUDENT PANEL: View Notices               -->
+        <!-- ========================================== -->
+        <div id="notif-student-panel" style="display: none;">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-bell"></i> Official Announcements Feed
+              </div>
+              <span class="card-subtitle">Communications sent to your cohort</span>
+            </div>
+            <div class="card-body" id="student-notif-feed">
+              <!-- Loaded dynamically -->
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- SAMS Core Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/notifications.js"></script>
+  <script>
+    // Customize sidebar for student role
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = Auth.getCurrentUser();
+      if (user && user.role === 'student') {
+        document.querySelectorAll('.admin-only-nav').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.student-only-nav').forEach(el => el.style.display = 'flex');
+        const roleInd = document.getElementById('sidebar-role-indicator');
+        if (roleInd) roleInd.textContent = 'Student View';
+      }
+    });
+  </script>
+</body>
+</html>

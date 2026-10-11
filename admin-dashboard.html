@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculty & Admin Dashboard | SAMS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div id="sidebar-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div class="sidebar-brand-text">
+          <h2>SAMS Portal</h2>
+          <span>Admin &bull; Faculty</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Core Operations</div>
+        <a href="admin-dashboard.html" class="nav-link active">
+          <i class="fa-solid fa-chart-pie"></i> Dashboard
+        </a>
+        <a href="students.html" class="nav-link">
+          <i class="fa-solid fa-user-graduate"></i> Student Management
+        </a>
+        <a href="attendance.html" class="nav-link">
+          <i class="fa-solid fa-clipboard-check"></i> Mark Attendance
+        </a>
+        <a href="attendance-history.html" class="nav-link">
+          <i class="fa-solid fa-calendar-days"></i> Attendance History
+        </a>
+        <a href="qr-attendance.html" class="nav-link">
+          <i class="fa-solid fa-qrcode"></i> QR Attendance
+        </a>
+
+        <div class="nav-section-title">Reports & Alerts</div>
+        <a href="reports.html" class="nav-link">
+          <i class="fa-solid fa-file-invoice"></i> Reports
+        </a>
+        <a href="notifications.html" class="nav-link">
+          <i class="fa-solid fa-bell"></i> Notifications
+        </a>
+
+        <div class="nav-section-title">User Account</div>
+        <a href="profile.html" class="nav-link">
+          <i class="fa-solid fa-circle-user"></i> Profile
+        </a>
+        <a href="#" class="nav-link btn-logout-trigger">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="demo-mode-pill">
+          <span class="pulse-dot"></span>
+          <span>Local Storage Active</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button type="button" class="sidebar-toggle-btn" id="sidebar-toggle" aria-label="Toggle Navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="header-page-title">
+            <h1>Institution Overview</h1>
+            <div class="header-breadcrumb">SAMS / Faculty & Admin Dashboard</div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button type="button" class="btn btn-secondary btn-sm btn-reset-demo" title="Reset all demo data">
+            <i class="fa-solid fa-rotate-left"></i> Reset Demo Data
+          </button>
+
+          <a href="notifications.html" class="header-action-btn" title="Notifications">
+            <i class="fa-solid fa-bell"></i>
+            <span class="badge-counter" id="nav-notif-badge" style="display:none;">0</span>
+          </a>
+
+          <a href="profile.html" class="user-profile-pill">
+            <img src="" alt="Avatar" class="user-avatar" id="nav-user-avatar">
+            <div class="user-info">
+              <span class="user-name" id="nav-user-name">Administrator</span>
+              <span class="user-role-badge" id="nav-user-role">Faculty Admin</span>
+            </div>
+          </a>
+        </div>
+      </header>
+
+      <!-- Main Body -->
+      <main class="content-body">
+        <!-- Quick Stats Cards Grid -->
+        <div class="stats-grid">
+          <div class="stat-card stat-primary">
+            <div class="stat-info">
+              <span class="stat-label">Total Students</span>
+              <span class="stat-value" id="stat-total-students">0</span>
+              <span class="stat-meta">Active enrollments</span>
+            </div>
+            <div class="stat-icon">
+              <i class="fa-solid fa-users"></i>
+            </div>
+          </div>
+
+          <div class="stat-card stat-success">
+            <div class="stat-info">
+              <span class="stat-label">Present Today</span>
+              <span class="stat-value" id="stat-present-today">0</span>
+              <span class="stat-meta">Verified in class</span>
+            </div>
+            <div class="stat-icon">
+              <i class="fa-solid fa-user-check"></i>
+            </div>
+          </div>
+
+          <div class="stat-card stat-danger">
+            <div class="stat-info">
+              <span class="stat-label">Absent Today</span>
+              <span class="stat-value" id="stat-absent-today">0</span>
+              <span class="stat-meta">Unaccounted for</span>
+            </div>
+            <div class="stat-icon">
+              <i class="fa-solid fa-user-xmark"></i>
+            </div>
+          </div>
+
+          <div class="stat-card stat-warning">
+            <div class="stat-info">
+              <span class="stat-label">Avg. Attendance</span>
+              <span class="stat-value" id="stat-avg-attendance">0%</span>
+              <span class="stat-meta">Across all records</span>
+            </div>
+            <div class="stat-icon">
+              <i class="fa-solid fa-percent"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Action Shortcuts -->
+        <div class="card" style="margin-bottom:24px;">
+          <div class="card-body" style="padding:16px 20px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+              <div>
+                <strong style="font-size:0.95rem; color:var(--slate-800);">Quick Operations</strong>
+                <div style="font-size:0.8rem; color:var(--slate-500);">Direct access to essential daily workflows</div>
+              </div>
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <a href="attendance.html" class="btn btn-primary btn-sm">
+                  <i class="fa-solid fa-clipboard-check"></i> Mark Today's Attendance
+                </a>
+                <a href="students.html" class="btn btn-secondary btn-sm">
+                  <i class="fa-solid fa-user-plus"></i> Add Student
+                </a>
+                <a href="qr-attendance.html" class="btn btn-secondary btn-sm">
+                  <i class="fa-solid fa-qrcode"></i> Generate QR Session
+                </a>
+                <a href="reports.html" class="btn btn-secondary btn-sm">
+                  <i class="fa-solid fa-file-export"></i> Export Reports
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap:24px; margin-bottom:24px;">
+          <!-- Chart 1: Attendance Trend -->
+          <div class="card" style="margin-bottom:0;" id="trend-chart-container">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-chart-column"></i> Attendance Trend (Recent Days)
+              </div>
+              <span style="font-size:0.75rem; color:var(--slate-400);">Daily Present vs Absent</span>
+            </div>
+            <div class="card-body">
+              <div style="position:relative; height:260px; width:100%;">
+                <canvas id="chart-attendance-trend"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart 2: Department Performance -->
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-chart-pie"></i> Department Attendance Rates
+              </div>
+              <span style="font-size:0.75rem; color:var(--slate-400);">Overall % by Faculty</span>
+            </div>
+            <div class="card-body">
+              <div style="position:relative; height:260px; width:100%;">
+                <canvas id="chart-dept-attendance"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity Feed -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">
+                <i class="fa-solid fa-clock-rotate-left"></i> Recent Attendance Log
+              </div>
+              <div class="card-subtitle">Latest attendance sessions recorded across all departments</div>
+            </div>
+            <a href="attendance-history.html" class="btn btn-secondary btn-sm">
+              View Full History <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div class="table-responsive" style="border:none;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Roll Number</th>
+                    <th>Student Name</th>
+                    <th>Department</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Marked Method</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-activity-table-body">
+                  <!-- Populated dynamically by dashboard.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- CDN Dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- SAMS Core Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

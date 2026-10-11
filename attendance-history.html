@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance History | SAMS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div id="sidebar-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div class="sidebar-brand-text">
+          <h2>SAMS Portal</h2>
+          <span>Admin &bull; Faculty</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Core Operations</div>
+        <a href="admin-dashboard.html" class="nav-link">
+          <i class="fa-solid fa-chart-pie"></i> Dashboard
+        </a>
+        <a href="students.html" class="nav-link">
+          <i class="fa-solid fa-user-graduate"></i> Student Management
+        </a>
+        <a href="attendance.html" class="nav-link">
+          <i class="fa-solid fa-clipboard-check"></i> Mark Attendance
+        </a>
+        <a href="attendance-history.html" class="nav-link active">
+          <i class="fa-solid fa-calendar-days"></i> Attendance History
+        </a>
+        <a href="qr-attendance.html" class="nav-link">
+          <i class="fa-solid fa-qrcode"></i> QR Attendance
+        </a>
+
+        <div class="nav-section-title">Reports & Alerts</div>
+        <a href="reports.html" class="nav-link">
+          <i class="fa-solid fa-file-invoice"></i> Reports
+        </a>
+        <a href="notifications.html" class="nav-link">
+          <i class="fa-solid fa-bell"></i> Notifications
+        </a>
+
+        <div class="nav-section-title">User Account</div>
+        <a href="profile.html" class="nav-link">
+          <i class="fa-solid fa-circle-user"></i> Profile
+        </a>
+        <a href="#" class="nav-link btn-logout-trigger">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="demo-mode-pill">
+          <span class="pulse-dot"></span>
+          <span>Local Storage Active</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button type="button" class="sidebar-toggle-btn" id="sidebar-toggle" aria-label="Toggle Navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="header-page-title">
+            <h1>Attendance History & Log</h1>
+            <div class="header-breadcrumb">SAMS / Audit & Historical Records</div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button type="button" class="btn btn-secondary btn-sm btn-reset-demo" title="Reset all demo data">
+            <i class="fa-solid fa-rotate-left"></i> Reset Demo Data
+          </button>
+
+          <a href="notifications.html" class="header-action-btn" title="Notifications">
+            <i class="fa-solid fa-bell"></i>
+            <span class="badge-counter" id="nav-notif-badge" style="display:none;">0</span>
+          </a>
+
+          <a href="profile.html" class="user-profile-pill">
+            <img src="" alt="Avatar" class="user-avatar" id="nav-user-avatar">
+            <div class="user-info">
+              <span class="user-name" id="nav-user-name">Administrator</span>
+              <span class="user-role-badge" id="nav-user-role">Faculty Admin</span>
+            </div>
+          </a>
+        </div>
+      </header>
+
+      <!-- Main Body -->
+      <main class="content-body">
+        <!-- Filter Toolbar Card -->
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="card-body" style="padding: 18px 22px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: flex-end;">
+              <div class="search-input-wrapper">
+                <label class="form-label">Search Student</label>
+                <div style="position: relative;">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input type="text" id="hist-search" class="form-control" placeholder="Name or roll number...">
+                </div>
+              </div>
+
+              <div>
+                <label class="form-label">Department</label>
+                <select id="hist-dept" class="form-select">
+                  <option value="all">All Departments</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Mechanical">Mechanical</option>
+                  <option value="Civil">Civil</option>
+                  <option value="Information Technology">Information Technology</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label">Academic Year</label>
+                <select id="hist-year" class="form-select">
+                  <option value="all">All Years</option>
+                  <option value="1st Year">1st Year</option>
+                  <option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option>
+                  <option value="4th Year">4th Year</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label">Status</label>
+                <select id="hist-status" class="form-select">
+                  <option value="all">All Statuses</option>
+                  <option value="Present">Present Only</option>
+                  <option value="Absent">Absent Only</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label">From Date</label>
+                <input type="date" id="hist-start-date" class="form-control">
+              </div>
+
+              <div>
+                <label class="form-label">To Date</label>
+                <input type="date" id="hist-end-date" class="form-control">
+              </div>
+
+              <div>
+                <button type="button" id="btn-hist-reset" class="btn btn-secondary" style="width: 100%;">
+                  <i class="fa-solid fa-rotate-left"></i> Reset
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filtered Summary Metrics -->
+        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: 20px;">
+          <div class="stat-card stat-primary" style="padding: 16px;">
+            <div class="stat-info">
+              <span class="stat-label">Filtered Records</span>
+              <span class="stat-value" id="hist-summary-total">0</span>
+            </div>
+            <div class="stat-icon" style="width: 42px; height: 42px; font-size: 1.2rem;">
+              <i class="fa-solid fa-list-ol"></i>
+            </div>
+          </div>
+
+          <div class="stat-card stat-success" style="padding: 16px;">
+            <div class="stat-info">
+              <span class="stat-label">Present Count</span>
+              <span class="stat-value" id="hist-summary-present">0</span>
+            </div>
+            <div class="stat-icon" style="width: 42px; height: 42px; font-size: 1.2rem;">
+              <i class="fa-solid fa-check"></i>
+            </div>
+          </div>
+
+          <div class="stat-card stat-danger" style="padding: 16px;">
+            <div class="stat-info">
+              <span class="stat-label">Absent Count</span>
+              <span class="stat-value" id="hist-summary-absent">0</span>
+            </div>
+            <div class="stat-icon" style="width: 42px; height: 42px; font-size: 1.2rem;">
+              <i class="fa-solid fa-xmark"></i>
+            </div>
+          </div>
+
+          <div class="stat-card stat-warning" style="padding: 16px;">
+            <div class="stat-info">
+              <span class="stat-label">Attendance %</span>
+              <span class="stat-value" id="hist-summary-percent">0%</span>
+            </div>
+            <div class="stat-icon" style="width: 42px; height: 42px; font-size: 1.2rem;">
+              <i class="fa-solid fa-percent"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- History Table Card -->
+        <div class="card">
+          <div class="card-body" style="padding: 0;">
+            <div class="table-responsive" style="border: none;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Roll Number</th>
+                    <th>Student Name</th>
+                    <th>Class / Department</th>
+                    <th>Status</th>
+                    <th>Method</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="history-table-body">
+                  <!-- Loaded dynamically by attendance-history.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- SAMS Core Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/attendance-history.js"></script>
+</body>
+</html>

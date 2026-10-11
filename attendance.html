@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mark Attendance | SAMS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div id="sidebar-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div class="sidebar-brand-text">
+          <h2>SAMS Portal</h2>
+          <span>Admin &bull; Faculty</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Core Operations</div>
+        <a href="admin-dashboard.html" class="nav-link">
+          <i class="fa-solid fa-chart-pie"></i> Dashboard
+        </a>
+        <a href="students.html" class="nav-link">
+          <i class="fa-solid fa-user-graduate"></i> Student Management
+        </a>
+        <a href="attendance.html" class="nav-link active">
+          <i class="fa-solid fa-clipboard-check"></i> Mark Attendance
+        </a>
+        <a href="attendance-history.html" class="nav-link">
+          <i class="fa-solid fa-calendar-days"></i> Attendance History
+        </a>
+        <a href="qr-attendance.html" class="nav-link">
+          <i class="fa-solid fa-qrcode"></i> QR Attendance
+        </a>
+
+        <div class="nav-section-title">Reports & Alerts</div>
+        <a href="reports.html" class="nav-link">
+          <i class="fa-solid fa-file-invoice"></i> Reports
+        </a>
+        <a href="notifications.html" class="nav-link">
+          <i class="fa-solid fa-bell"></i> Notifications
+        </a>
+
+        <div class="nav-section-title">User Account</div>
+        <a href="profile.html" class="nav-link">
+          <i class="fa-solid fa-circle-user"></i> Profile
+        </a>
+        <a href="#" class="nav-link btn-logout-trigger">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="demo-mode-pill">
+          <span class="pulse-dot"></span>
+          <span>Local Storage Active</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button type="button" class="sidebar-toggle-btn" id="sidebar-toggle" aria-label="Toggle Navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="header-page-title">
+            <h1>Mark Daily Attendance</h1>
+            <div class="header-breadcrumb">SAMS / Attendance Marking Console</div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button type="button" class="btn btn-secondary btn-sm btn-reset-demo" title="Reset all demo data">
+            <i class="fa-solid fa-rotate-left"></i> Reset Demo Data
+          </button>
+
+          <a href="notifications.html" class="header-action-btn" title="Notifications">
+            <i class="fa-solid fa-bell"></i>
+            <span class="badge-counter" id="nav-notif-badge" style="display:none;">0</span>
+          </a>
+
+          <a href="profile.html" class="user-profile-pill">
+            <img src="" alt="Avatar" class="user-avatar" id="nav-user-avatar">
+            <div class="user-info">
+              <span class="user-name" id="nav-user-name">Administrator</span>
+              <span class="user-role-badge" id="nav-user-role">Faculty Admin</span>
+            </div>
+          </a>
+        </div>
+      </header>
+
+      <!-- Main Body -->
+      <main class="content-body">
+        <!-- Class & Date Selection Toolbar Card -->
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="card-body" style="padding: 20px 24px;">
+            <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between;">
+              <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; flex: 1;">
+                <div style="min-width: 200px;">
+                  <label class="form-label" for="att-dept-select">Department</label>
+                  <select id="att-dept-select" class="form-select">
+                    <option value="all">All Departments</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Mechanical">Mechanical</option>
+                    <option value="Civil">Civil</option>
+                    <option value="Information Technology">Information Technology</option>
+                  </select>
+                </div>
+
+                <div style="min-width: 160px;">
+                  <label class="form-label" for="att-year-select">Academic Year</label>
+                  <select id="att-year-select" class="form-select">
+                    <option value="all">All Years</option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year" selected>3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                  </select>
+                </div>
+
+                <div style="min-width: 170px;">
+                  <label class="form-label" for="att-date-picker">
+                    Date <small style="color:var(--slate-400);">(Today or Past)</small>
+                  </label>
+                  <input type="date" id="att-date-picker" class="form-control" required>
+                </div>
+              </div>
+
+              <div>
+                <button type="button" class="btn btn-primary" id="btn-save-attendance">
+                  <i class="fa-solid fa-floppy-disk"></i> Save Attendance
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notification Banner if Editing Existing Attendance for Selected Date -->
+        <div id="att-status-banner" style="display: none; margin-bottom: 20px;"></div>
+
+        <!-- Attendance Action Bar & Table Card -->
+        <div class="card">
+          <div class="card-header" style="background: var(--slate-50);">
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <div class="search-input-wrapper" style="min-width: 220px;">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="att-search-input" class="form-control" placeholder="Search student...">
+              </div>
+
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-mark-all-present">
+                  <i class="fa-solid fa-check-double" style="color:var(--success-600);"></i> Mark All Present
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-mark-all-absent">
+                  <i class="fa-solid fa-ban" style="color:var(--danger-600);"></i> Mark All Absent
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-invert-selection">
+                  <i class="fa-solid fa-repeat"></i> Invert
+                </button>
+              </div>
+            </div>
+
+            <!-- Real-time Counters -->
+            <div style="display: flex; align-items: center; gap: 12px; font-size: 0.88rem;">
+              <span class="badge badge-present">
+                <i class="fa-solid fa-user-check"></i> Present: <strong id="att-count-present">0</strong>
+              </span>
+              <span class="badge badge-absent">
+                <i class="fa-solid fa-user-xmark"></i> Absent: <strong id="att-count-absent">0</strong>
+              </span>
+              <span class="badge badge-student">
+                Total: <strong id="att-count-total">0</strong>
+              </span>
+            </div>
+          </div>
+
+          <div class="card-body" style="padding: 0;">
+            <div class="table-responsive" style="border: none;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Roll Number</th>
+                    <th>Student Name</th>
+                    <th>Class / Department</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Toggle Action</th>
+                  </tr>
+                </thead>
+                <tbody id="att-marking-table-body">
+                  <!-- Loaded dynamically by attendance.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card-footer" style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: 0.82rem; color: var(--slate-500);">
+              Tip: Attendance records update seamlessly without creating duplicate dates.
+            </div>
+            <button type="button" class="btn btn-primary" onclick="saveCurrentAttendance()">
+              <i class="fa-solid fa-floppy-disk"></i> Save Attendance
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- SAMS Core Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/attendance.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "student-attendance-management-system",
+  "version": "1.0.0",
+  "description": "Student Attendance Management System (SAMS) - Frontend Web Application",
+  "main": "serve.js",
+  "scripts": {
+    "start": "node serve.js",
+    "serve": "node serve.js",
+    "test": "node tests/test-sams.js && node tests/test-html-links.js",
+    "test:unit": "node tests/test-sams.js",
+    "test:links": "node tests/test-html-links.js",
+    "build": "echo \"Static site - no build required\""
+  },
+  "keywords": [
+    "attendance",
+    "student-management",
+    "qr-attendance",
+    "chartjs",
+    "college-portal"
+  ],
+  "author": "SAMS Team",
+  "license": "MIT"
+}

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Attendance Session | SAMS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div id="sidebar-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div class="sidebar-brand-text">
+          <h2>SAMS Portal</h2>
+          <span id="sidebar-role-indicator">Portal Session</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <!-- Rendered dynamically or standard links -->
+        <a href="admin-dashboard.html" class="nav-link admin-only-nav">
+          <i class="fa-solid fa-chart-pie"></i> Dashboard
+        </a>
+        <a href="student-dashboard.html" class="nav-link student-only-nav" style="display:none;">
+          <i class="fa-solid fa-chart-user"></i> My Attendance
+        </a>
+        <a href="students.html" class="nav-link admin-only-nav">
+          <i class="fa-solid fa-user-graduate"></i> Student Management
+        </a>
+        <a href="attendance.html" class="nav-link admin-only-nav">
+          <i class="fa-solid fa-clipboard-check"></i> Mark Attendance
+        </a>
+        <a href="attendance-history.html" class="nav-link admin-only-nav">
+          <i class="fa-solid fa-calendar-days"></i> Attendance History
+        </a>
+        <a href="qr-attendance.html" class="nav-link active">
+          <i class="fa-solid fa-qrcode"></i> QR Attendance
+        </a>
+        <a href="reports.html" class="nav-link admin-only-nav">
+          <i class="fa-solid fa-file-invoice"></i> Reports
+        </a>
+        <a href="notifications.html" class="nav-link">
+          <i class="fa-solid fa-bell"></i> Notifications
+        </a>
+        <a href="profile.html" class="nav-link">
+          <i class="fa-solid fa-circle-user"></i> Profile
+        </a>
+        <a href="#" class="nav-link btn-logout-trigger">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="demo-mode-pill">
+          <span class="pulse-dot"></span>
+          <span>Local Storage Active</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button type="button" class="sidebar-toggle-btn" id="sidebar-toggle" aria-label="Toggle Navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="header-page-title">
+            <h1>QR-Based Attendance</h1>
+            <div class="header-breadcrumb">SAMS / Touchless Session Check-In</div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button type="button" class="btn btn-secondary btn-sm btn-reset-demo" title="Reset all demo data">
+            <i class="fa-solid fa-rotate-left"></i> Reset Demo Data
+          </button>
+
+          <a href="notifications.html" class="header-action-btn" title="Notifications">
+            <i class="fa-solid fa-bell"></i>
+            <span class="badge-counter" id="nav-notif-badge" style="display:none;">0</span>
+          </a>
+
+          <a href="profile.html" class="user-profile-pill">
+            <img src="" alt="Avatar" class="user-avatar" id="nav-user-avatar">
+            <div class="user-info">
+              <span class="user-name" id="nav-user-name">User</span>
+              <span class="user-role-badge" id="nav-user-role">Member</span>
+            </div>
+          </a>
+        </div>
+      </header>
+
+      <!-- Main Body -->
+      <main class="content-body">
+        <!-- Demonstration Security Notice -->
+        <div class="notification-card notif-info" style="margin-bottom: 24px;">
+          <div class="notification-icon">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div class="notification-content">
+            <div class="notification-title">College Demonstration Architecture Note</div>
+            <p class="notification-text">
+              This application runs as a static frontend using browser LocalStorage. 
+              The QR workflow demonstrates instantaneous session validation, camera integration, and manual code failover. 
+              Client-side verification is suitable for classroom demonstrations; real-world production deployments require server-side cryptographically signed OTPs and geolocation auditing.
+            </p>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ADMIN VIEW: Generate Session QR Code      -->
+        <!-- ========================================== -->
+        <div id="qr-admin-section" style="display: none;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px;">
+            <!-- Session Generator Card -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  <i class="fa-solid fa-qrcode"></i> Generate Class QR Session
+                </div>
+                <div class="card-subtitle">Broadcast a QR code on the classroom projector</div>
+              </div>
+              <div class="card-body">
+                <form id="qr-generation-form">
+                  <div class="form-group">
+                    <label class="form-label" for="qr-gen-dept">Target Department</label>
+                    <select id="qr-gen-dept" class="form-select" required>
+                      <option value="Computer Science">Computer Science</option>
+                      <option value="Electronics">Electronics</option>
+                      <option value="Mechanical">Mechanical</option>
+                      <option value="Civil">Civil</option>
+                      <option value="Information Technology">Information Technology</option>
+                      <option value="all">All Departments (Combined Lecture)</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="qr-gen-year">Academic Year</label>
+                    <select id="qr-gen-year" class="form-select" required>
+                      <option value="3rd Year" selected>3rd Year</option>
+                      <option value="1st Year">1st Year</option>
+                      <option value="2nd Year">2nd Year</option>
+                      <option value="4th Year">4th Year</option>
+                      <option value="all">All Years</option>
+                    </select>
+                  </div>
+
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div class="form-group">
+                      <label class="form-label" for="qr-gen-date">Session Date</label>
+                      <input type="date" id="qr-gen-date" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label" for="qr-gen-duration">Validity (Minutes)</label>
+                      <select id="qr-gen-duration" class="form-select">
+                        <option value="15">15 Minutes</option>
+                        <option value="30" selected>30 Minutes</option>
+                        <option value="60">60 Minutes</option>
+                        <option value="120">2 Hours</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">
+                    <i class="fa-solid fa-bolt"></i> Generate QR Code Session
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <!-- QR Code Presentation Display -->
+            <div class="card" id="qr-display-container" style="display: none;">
+              <div class="card-header">
+                <div class="card-title">
+                  <i class="fa-solid fa-display"></i> Active Session Display
+                </div>
+                <span class="badge badge-present" id="qr-display-expires">Active</span>
+              </div>
+              <div class="card-body" style="text-align: center;">
+                <div class="qr-container">
+                  <div id="qr-canvas-holder" class="qr-box">
+                    <!-- Canvas rendered by QRCode.js or fallback -->
+                  </div>
+
+                  <div class="session-code-banner" id="qr-display-code">
+                    SAMS-XXXX-XXXXXX
+                  </div>
+                  <div style="font-size: 0.82rem; color: var(--slate-500); margin-top: 6px;" id="qr-display-details">
+                    Class Details
+                  </div>
+                </div>
+
+                <p style="font-size: 0.85rem; color: var(--slate-600);">
+                  Students scan this QR code or type the session code above into their student portal to record attendance.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Session Attendees Table -->
+          <div class="card" style="margin-top: 24px;">
+            <div class="card-header">
+              <div>
+                <div class="card-title">
+                  <i class="fa-solid fa-users-viewfinder"></i> Live QR Check-Ins
+                </div>
+                <div class="card-subtitle">Students verified via this session</div>
+              </div>
+              <span class="badge badge-present" id="qr-attendees-count">0 Students</span>
+            </div>
+            <div class="card-body" style="padding: 0;">
+              <div class="table-responsive" style="border: none;">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Roll Number</th>
+                      <th>Student Name</th>
+                      <th>Department</th>
+                      <th>Verified Timestamp</th>
+                    </tr>
+                  </thead>
+                  <tbody id="qr-attendees-table-body">
+                    <!-- Loaded dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- STUDENT VIEW: Scan QR / Manual Code Entry  -->
+        <!-- ========================================== -->
+        <div id="qr-student-section" style="display: none;">
+          <div style="max-width: 600px; margin: 0 auto;">
+            <!-- Student Identity Confirmation Card -->
+            <div class="card" style="margin-bottom: 20px;">
+              <div class="card-body" style="padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="font-size: 0.9rem; font-weight: 600; color: var(--slate-800);" id="student-qr-info">
+                  Signed in as: Alex Johnson (CS2023001)
+                </div>
+                <span class="badge badge-student">Student</span>
+              </div>
+            </div>
+
+            <!-- Camera Scanner Card -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  <i class="fa-solid fa-camera"></i> Camera QR Scanner
+                </div>
+                <span style="font-size: 0.8rem; color: var(--slate-500);">Instant Check-In</span>
+              </div>
+              <div class="card-body" style="text-align: center;">
+                <div id="qr-reader" style="width: 100%; min-height: 240px; background: var(--slate-100); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; border: 2px dashed var(--slate-300); overflow: hidden;">
+                  <div style="color: var(--slate-400); padding: 20px;">
+                    <i class="fa-solid fa-camera-retro" style="font-size: 2.5rem; margin-bottom: 8px;"></i>
+                    <div>Click "Start Camera" to scan classroom QR code</div>
+                  </div>
+                </div>
+
+                <div id="qr-scan-feedback" style="margin-bottom: 14px;"></div>
+
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                  <button type="button" class="btn btn-primary" id="btn-start-camera">
+                    <i class="fa-solid fa-video"></i> Start Camera
+                  </button>
+                  <button type="button" class="btn btn-danger" id="btn-stop-camera" style="display: none;">
+                    <i class="fa-solid fa-video-slash"></i> Stop Camera
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Manual Session Code Fallback Card -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  <i class="fa-solid fa-keyboard"></i> Manual Session Code Fallback
+                </div>
+                <span class="badge badge-student">Reliable Failover</span>
+              </div>
+              <div class="card-body">
+                <p style="font-size: 0.85rem; color: var(--slate-600); margin-bottom: 14px;">
+                  If camera access is blocked or unavailable, enter the session code displayed on the classroom board or screen.
+                </p>
+
+                <form id="qr-manual-form" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                  <input type="text" id="qr-manual-code" class="form-control" style="flex: 1; min-width: 220px; font-family: monospace; font-size: 1rem; text-transform: uppercase;" placeholder="e.g. SAMS-CS3-20261011-9821" required>
+                  <button type="submit" class="btn btn-success">
+                    <i class="fa-solid fa-circle-check"></i> Submit Attendance
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Instant Validation Result Feedback Card -->
+            <div id="qr-result-card" class="notification-card" style="display: none;">
+              <div class="notification-icon">
+                <i class="fa-solid fa-info"></i>
+              </div>
+              <div class="notification-content" id="qr-result-message">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 16px;">
+              <a href="student-dashboard.html" class="btn btn-secondary btn-sm">
+                <i class="fa-solid fa-arrow-left"></i> Return to Student Dashboard
+              </a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- QR Libraries CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+  <!-- SAMS Core Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/qr-attendance.js"></script>
+
+  <script>
+    // Customize sidebar for student role
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = Auth.getCurrentUser();
+      if (user && user.role === 'student') {
+        document.querySelectorAll('.admin-only-nav').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.student-only-nav').forEach(el => el.style.display = 'flex');
+        const roleInd = document.getElementById('sidebar-role-indicator');
+        if (roleInd) roleInd.textContent = 'Student View';
+      }
+    });
+  </script>
+</body>
+</html>

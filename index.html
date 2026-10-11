@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Student Attendance Management System (SAMS)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .login-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #f8fafc 100%);
+      padding: 24px;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 480px;
+      background: #ffffff;
+      border-radius: var(--border-radius-lg);
+      box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
+      border: 1px solid var(--slate-200);
+      overflow: hidden;
+    }
+    .login-header {
+      background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-900) 100%);
+      color: #ffffff;
+      padding: 32px 28px;
+      text-align: center;
+    }
+    .login-logo {
+      width: 54px;
+      height: 54px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    .login-header h1 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .login-header p {
+      font-size: 0.85rem;
+      color: var(--primary-100);
+      margin-top: 4px;
+    }
+    .login-body {
+      padding: 32px 28px 24px;
+    }
+    .role-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: var(--slate-100);
+      padding: 4px;
+      border-radius: var(--border-radius-sm);
+      margin-bottom: 22px;
+    }
+    .role-tab-btn {
+      padding: 9px;
+      border: none;
+      background: transparent;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--slate-600);
+      cursor: pointer;
+      border-radius: var(--border-radius-sm);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .role-tab-btn.active {
+      background: #ffffff;
+      color: var(--primary-700);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .pwd-wrapper {
+      position: relative;
+    }
+    .pwd-toggle-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--slate-400);
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .pwd-toggle-btn:hover {
+      color: var(--slate-700);
+    }
+    .demo-creds-box {
+      margin-top: 24px;
+      padding: 16px;
+      background-color: var(--slate-50);
+      border: 1px dashed var(--slate-300);
+      border-radius: var(--border-radius-sm);
+      font-size: 0.82rem;
+    }
+    .demo-creds-title {
+      font-weight: 700;
+      color: var(--slate-700);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .demo-pills-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .demo-fill-btn {
+      padding: 5px 10px;
+      font-size: 0.78rem;
+      border-radius: 4px;
+      border: 1px solid var(--primary-200);
+      background: #ffffff;
+      color: var(--primary-700);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+    }
+    .demo-fill-btn:hover {
+      background: var(--primary-50);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-logo">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <h1>Student Attendance System</h1>
+        <p>Institutional Portal &bull; Academic Year 2026</p>
+      </div>
+
+      <div class="login-body">
+        <!-- Role Selection -->
+        <div class="role-tabs">
+          <button type="button" class="role-tab-btn active" id="tab-role-admin" onclick="selectRole('admin')">
+            <i class="fa-solid fa-user-tie"></i> Admin / Faculty
+          </button>
+          <button type="button" class="role-tab-btn" id="tab-role-student" onclick="selectRole('student')">
+            <i class="fa-solid fa-user-graduate"></i> Student
+          </button>
+        </div>
+
+        <form id="login-form">
+          <input type="hidden" id="login-role" value="admin">
+
+          <div class="form-group">
+            <label class="form-label" for="login-identifier" id="label-identifier">
+              Username <span class="required">*</span>
+            </label>
+            <div class="search-input-wrapper">
+              <i class="fa-solid fa-user" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--slate-400);"></i>
+              <input type="text" id="login-identifier" class="form-control" style="padding-left:36px;" placeholder="e.g. admin" required autocomplete="username">
+            </div>
+            <div class="form-error" id="error-identifier"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="login-password">
+              Password <span class="required">*</span>
+            </label>
+            <div class="pwd-wrapper">
+              <i class="fa-solid fa-lock" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--slate-400);"></i>
+              <input type="password" id="login-password" class="form-control" style="padding-left:36px; padding-right:40px;" placeholder="Enter password" required autocomplete="current-password">
+              <button type="button" class="pwd-toggle-btn" id="btn-toggle-pwd" aria-label="Toggle password visibility">
+                <i class="fa-solid fa-eye" id="eye-icon"></i>
+              </button>
+            </div>
+            <div class="form-error" id="error-password"></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" style="width:100%; margin-top:8px;" id="btn-login-submit">
+            <i class="fa-solid fa-right-to-bracket"></i> Sign In to SAMS
+          </button>
+        </form>
+
+        <!-- Demo Credentials Helper -->
+        <div class="demo-creds-box">
+          <div class="demo-creds-title">
+            <i class="fa-solid fa-key" style="color:var(--warning-600);"></i> Quick Demonstration Credentials
+          </div>
+          <div style="color:var(--slate-600); line-height:1.4;">
+            Click below to auto-fill sample accounts:
+          </div>
+          <div class="demo-pills-row">
+            <button type="button" class="demo-fill-btn" onclick="quickFill('admin', 'admin123', 'admin')">
+              <i class="fa-solid fa-shield-halved"></i> Admin (admin / admin123)
+            </button>
+            <button type="button" class="demo-fill-btn" onclick="quickFill('CS2023001', 'student123', 'student')">
+              <i class="fa-solid fa-user-graduate"></i> Student 1 (CS2023001 / student123)
+            </button>
+            <button type="button" class="demo-fill-btn" onclick="quickFill('EC2023014', 'student123', 'student')">
+              <i class="fa-solid fa-user-graduate"></i> Student 2 (EC2023014 / student123)
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-top:16px; text-align:center; font-size:0.75rem; color:var(--slate-400);">
+          Note: This demonstration stores records in browser LocalStorage. Data is isolated to this browser.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Redirect if already logged in
+    document.addEventListener('DOMContentLoaded', () => {
+      Auth.redirectIfLoggedIn();
+
+      // Show toast if redirected from logout or required auth
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('logged_out')) {
+        showToast('You have been signed out safely.', 'info');
+      } else if (urlParams.get('auth_required')) {
+        showToast('Please log in to access this page.', 'warning');
+      }
+
+      // Password toggle
+      const btnToggle = document.getElementById('btn-toggle-pwd');
+      const pwdInput = document.getElementById('login-password');
+      const eyeIcon = document.getElementById('eye-icon');
+
+      btnToggle.addEventListener('click', () => {
+        if (pwdInput.type === 'password') {
+          pwdInput.type = 'text';
+          eyeIcon.className = 'fa-solid fa-eye-slash';
+        } else {
+          pwdInput.type = 'password';
+          eyeIcon.className = 'fa-solid fa-eye';
+        }
+      });
+
+      // Login form submit
+      const form = document.getElementById('login-form');
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const role = document.getElementById('login-role').value;
+        const identifier = document.getElementById('login-identifier').value;
+        const password = document.getElementById('login-password').value;
+
+        document.getElementById('error-identifier').textContent = '';
+        document.getElementById('error-password').textContent = '';
+
+        const result = Auth.login(identifier, password, role);
+        if (result.success) {
+          showToast(`Welcome back, ${result.user.name}!`, 'success');
+          setTimeout(() => {
+            if (result.user.role === 'admin') {
+              window.location.href = 'admin-dashboard.html';
+            } else {
+              window.location.href = 'student-dashboard.html';
+            }
+          }, 600);
+        } else {
+          showToast(result.message, 'danger');
+          document.getElementById('error-identifier').textContent = result.message;
+        }
+      });
+    });
+
+    function selectRole(role) {
+      document.getElementById('login-role').value = role;
+      const tabAdmin = document.getElementById('tab-role-admin');
+      const tabStudent = document.getElementById('tab-role-student');
+      const labelId = document.getElementById('label-identifier');
+      const inputId = document.getElementById('login-identifier');
+
+      if (role === 'admin') {
+        tabAdmin.classList.add('active');
+        tabStudent.classList.remove('active');
+        labelId.innerHTML = 'Username <span class="required">*</span>';
+        inputId.placeholder = 'e.g. admin';
+      } else {
+        tabStudent.classList.add('active');
+        tabAdmin.classList.remove('active');
+        labelId.innerHTML = 'Roll Number or Username <span class="required">*</span>';
+        inputId.placeholder = 'e.g. CS2023001';
+      }
+    }
+
+    function quickFill(id, pwd, role) {
+      selectRole(role);
+      document.getElementById('login-identifier').value = id;
+      document.getElementById('login-password').value = pwd;
+      showToast(`Filled ${role} demo credentials. Click "Sign In"!`, 'info');
+    }
+  </script>
+</body>
+</html>
